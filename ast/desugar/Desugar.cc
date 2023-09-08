@@ -410,9 +410,9 @@ ExpressionPtr desugarMlhs(DesugarContext dctx, core::LocOffsets loc, parser::Mlh
                 auto zlhloc = lhloc.copyWithZeroLength();
                 auto index = MK::Send3(lhloc, MK::Constant(lhloc, core::Symbols::Range()), core::Names::new_(), zlhloc,
                                        MK::Int(lhloc, left), MK::Int(lhloc, -right), std::move(exclusive));
-                stats.emplace_back(MK::Assign(
-                    lhloc, std::move(lh),
-                    MK::Send1(loc, MK::Local(loc, tempExpanded), core::Names::slice(), zlhloc, std::move(index))));
+                auto slice = MK::Send1(loc, MK::Local(loc, tempExpanded), core::Names::slice(), zlhloc, std::move(index));
+                auto orEmptyArray = MK::Or(lhloc, std::move(slice), MK::Array(lhloc, core::TypePtr::bottom()));
+                stats.emplace_back(MK::Assign(lhloc, std::move(lh), std::move(orEmptyArray)));
             }
             i = -right;
         } else {
