@@ -15,3 +15,12 @@ describe 'example' do
     end
   end
 end
+
+module SomeModule
+  describe 'inside a module' do
+    it 'works' do
+      # No results
+      # ^ hover: null
+    end
+  end
+end
