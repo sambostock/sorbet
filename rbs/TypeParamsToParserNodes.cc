@@ -29,6 +29,15 @@ parser::NodeVec TypeParamsToParserNode::typeParams(const rbs_node_list_t *rbsTyp
         }
 
         auto nameStr = parser.resolveConstant(rbsTypeParam->name);
+
+        if (nameStr == "T") {
+            if (auto e = ctx.beginIndexerError(loc, core::errors::Rewriter::RBSUnsupported)) {
+                e.setHeader("`{}` is not allowed as a type parameter name because it conflicts with the `{}` module used "
+                            "by Sorbet",
+                            "T", "T");
+            }
+        }
+
         auto nameConstant = ctx.state.enterNameConstant(nameStr);
 
         auto args = parser::NodeVec();

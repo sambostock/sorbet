@@ -20,6 +20,7 @@ module Errors
 
   #: [unchecked T]
   #   ^^^^^^^^^^^ error: `unchecked` type parameters are not supported by Sorbet
+  #   ^^^^^^^^^^^ error: `T` is not allowed as a type parameter name because it conflicts with the `T` module used by Sorbet
   class UnsupportedError1; end
 
   class UselessSignature1 #: [U]
@@ -212,6 +213,7 @@ T.reveal_type(g16) # error: Revealed type: `G14[MyModule::MyClass]`
 
 # Test deep copy with type parameter references
 #: [T, U]
+#   ^ error: `T` is not allowed as a type parameter name because it conflicts with the `T` module used by Sorbet
 class G17; end
 
 #: [X] (X) -> G17[X, X]

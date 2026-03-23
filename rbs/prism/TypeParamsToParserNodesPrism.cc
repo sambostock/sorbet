@@ -23,6 +23,15 @@ vector<pm_node_t *> TypeParamsToParserNodesPrism::typeParams(const rbs_node_list
         }
 
         auto nameStr = parser.resolveConstant(rbsTypeParam->name);
+
+        if (nameStr == "T") {
+            if (auto e = ctx.beginIndexerError(loc, core::errors::Rewriter::RBSUnsupported)) {
+                e.setHeader("`{}` is not allowed as a type parameter name because it conflicts with the `{}` module used "
+                            "by Sorbet",
+                            "T", "T");
+            }
+        }
+
         auto nameConstant = ctx.state.enterNameConstant(nameStr);
 
         absl::InlinedVector<pm_node_t *, 1> args{};
